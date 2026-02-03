@@ -1,4 +1,5 @@
-# microservices-course-olezhek28
+# spacecraft-fabric
+
 
 Этот репозиторий содержит проект из курса [Микросервисы, как в BigTech 2.0](https://olezhek28.courses/microservices) от [Олега Козырева](http://t.me/olezhek28go).
 
