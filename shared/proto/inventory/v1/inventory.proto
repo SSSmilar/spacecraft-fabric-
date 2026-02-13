@@ -1,0 +1,111 @@
+syntax = "proto3" ;
+
+package pb.inventory.v1;
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/sssmilar/microservices-course-examples/spacecraft-fabric/shared/proto/inventory/v1;inventory_v1";
+
+service InventoryService {
+  //returns list of details with the possibility of filtering
+  rpc List(ListPartsRequest) returns (ListPartsResponse) ;
+  //returns information about the detail by UUID
+  rpc Get(GetPartRequest) returns (GetPartResponse) ;
+}
+message GetPartResponse {
+  //information for detail
+  Part part = 1 ;
+}
+message GetPartRequest{
+  //id of the part
+  string uuid = 1 ;
+}
+message ListPartsResponse{
+  //list of parts
+  repeated Part parts = 1 ;
+}
+message ListPartsRequest {
+  //filter by details(all fields are optional)
+  PartsFilter filter = 1 ;
+}
+
+message PartsFilter {
+  //filter by uuids if it empty  , then not filter by uuids
+  repeated string uuids = 1 ;
+  //filter by name if it empty , then not filter by name
+  repeated string names = 2 ;
+  //filter by category if it empty , then not filter by category
+  repeated Category categories = 3 ;
+  //filter by country of manufacturer if it empty , then not filter by country
+  repeated string manufacturer_countries = 4 ;
+  //filter by tags if it empty , then not filter by tags
+  repeated string tags = 5 ;
+
+}
+message Part {
+  //id of the part
+  string uuid = 1 ;
+  //name of the part
+  string name = 2 ;
+  //description of the part
+  string description = 3 ;
+  //Price of the unit
+  double price = 4 ;
+  //quantity in storage
+  int64 stock_quantity = 5 ;
+  //category
+  Category category = 6 ;
+  //dimensions of the part
+  Dimensions dimensions = 7 ;
+  //information about the production
+  Manufacturer manufacturer = 8  ;
+  //tags for fast search
+  repeated string tags = 9 ;
+  //flexible metadata
+  map<string , Value> metadata = 10 ;
+  //Data of creation
+  google.protobuf.Timestamp created_at = 11 ;
+  //Data of last update
+  google.protobuf.Timestamp updated_at = 12 ;
+}
+
+message Dimensions {
+  //length in centimeters
+  double length = 1 ;
+  //width in centimeters
+  double  width = 2 ;
+  //height in centimeters
+  double height = 3 ;
+  //weight in kilograms
+  double weight = 4 ;
+}
+
+message Manufacturer {
+  //name
+  string name = 1 ;
+  //Country of manufacturer
+  string country  = 2 ;
+  //website of the manufacturer
+  string website = 3 ;
+}
+message Value {
+  oneof metadata {
+    string string_value = 1;
+    int64 int64_value = 2 ;
+    double double_value = 3 ;
+    bool bool_value = 4 ;
+  }
+}
+enum Category {
+  //Unknown category
+  UNKNOWN = 0 ;
+  //Engine
+  ENGINE = 1 ;
+  //Fuel
+  FUEL = 2 ;
+  //Porthole
+  PORTHOLE = 3 ;
+  //Wing
+  WING = 4 ;
+}
